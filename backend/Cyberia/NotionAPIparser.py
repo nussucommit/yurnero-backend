@@ -54,7 +54,9 @@ def parseText(data):
 
         elif (attribute == "color" and data["annotations"][attribute] != "default"):
             special_attribute[attribute] = data["annotations"][attribute]
-            
+        
+        if (data["text"]["link"]):
+            special_attribute["link"] = data["text"]["link"]["url"]
     
     result["attribute"] = special_attribute
     return result

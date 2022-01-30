@@ -20,7 +20,8 @@ version = os.getenv('version')
 def Cyberia(request):
     data = []
     # data += overview()
-    data += time()
+    # data += time()
+    data += registriation()
     result = dict()
     result["result"] = data
     benefit()
@@ -53,6 +54,9 @@ def time():
 def registriation():
     url = 'https://api.notion.com/v1/blocks/8bfb13152625483f996f26c2e7d2b371/children'
     headers = {'Notion-Version': version, 'Authorization': token}
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    return parse(data)
 
 def acadia_training():
     url = 'https://api.notion.com/v1/blocks/d36eabdea553461dadf34410534deb25/children'
