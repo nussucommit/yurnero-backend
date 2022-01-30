@@ -3,13 +3,25 @@ from rest_framework.decorators import api_view
 from django.http import JsonResponse
 import requests
 
+from dotenv import load_dotenv 
+import os 
+from pathlib import Path 
+ 
+dotenv_path = Path('backend/.env') 
+load_dotenv(dotenv_path) 
+token = os.getenv('token') 
+version = os.getenv('version')
+headers = {
+  'Authorization': 'Bearer ' + token,
+  'Notion-Version': version
+}
+
 # Create your views here.
 
 
 @api_view(['GET'])
 def get_creation(request):
     url = 'https://api.notion.com/v1/blocks/2aa850b21f7e4d9f846f61dc78c6f145/children'
-    headers = {'Notion-Version': '2021-08-16', 'Authorization': 'Bearer secret_TcMjQSB7rYBBwB6pzhlq5OgR6cRgVwo0oT0h2zIgf1F'}
     response = requests.get(url, headers=headers)
     data = response.json()
     result = parse_response(data)
@@ -44,7 +56,6 @@ def extract_title(results):
 def extract_content(id):
     result = ""
     url = 'https://api.notion.com/v1/blocks/' + id + '/children'
-    headers = {'Notion-Version': '2021-08-16', 'Authorization': 'Bearer secret_TcMjQSB7rYBBwB6pzhlq5OgR6cRgVwo0oT0h2zIgf1F'}
     response = requests.get(url, headers=headers)
     data = response.json()
     for content in data["results"]:
