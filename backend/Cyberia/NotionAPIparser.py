@@ -1,4 +1,13 @@
 import json
+from dotenv import load_dotenv
+from pathlib import Path
+import os
+import requests
+
+dotenv_path = Path('backend/.env')
+load_dotenv(dotenv_path)
+token = os.getenv('token')
+version = os.getenv('version')
 
 def parse(data):
     if (data["object"] == "list"):
@@ -56,6 +65,14 @@ def parseBulletList(data):
     result["type"] = "bulleted_list_item"
     list = []
     for i in data["bulleted_list_item"]["text"]:
-        list.append(parseText(i))
+        bullet_item = parseText(i)
+        if data["has_children"]:
+            url = 'https://api.notion.com/v1/blocks/' + data["id"] + '/children'
+            headers = {'Notion-Version': version, 'Authorization': token}
+            response = requests.get(url, headers=headers)
+            data = response.json()
+            bullet_item["children"] = parse(data)
+        
+        list.append(bullet_item)
     result["content"] = list
     return result
