@@ -45,3 +45,12 @@ def get_sample_block(request):
   response = requests.get(url, headers=NOTION_HEADERS)
 
   return Response(response.json(), status=status.HTTP_200_OK)
+
+# sample test request: block children
+@api_view(['GET'])
+def get_sample_block_children(request):
+  block_id = "b568ee3e563a48b4a1a865aee9ecb6ce"
+  url = GET_BLOCK_URL + block_id + '/children'
+  response = requests.get(url, headers=NOTION_HEADERS)
+
+  return Response(response.json(), status=status.HTTP_200_OK)
