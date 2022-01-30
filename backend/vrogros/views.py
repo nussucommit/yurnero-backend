@@ -3,6 +3,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 import requests
+import os
+from dotenv import load_dotenv
+from pathlib import Path
+
 
 # DECLARATIONS GO HERE
 
@@ -12,8 +16,10 @@ GET_PAGE_URL = "https://api.notion.com/v1/pages/"
 GET_BLOCK_URL = "https://api.notion.com/v1/blocks/"
 
 # request header to access Notion database
-TOKEN = "secret_TcMjQSB7rYBBwB6pzhlq5OgR6cRgVwo0oT0h2zIgf1F"
-NOTION_VERSION = "2021-08-16"
+dotenv_path = Path('backend/.env')
+load_dotenv(dotenv_path)
+TOKEN = os.getenv('token')
+NOTION_VERSION = os.getenv('version')
 NOTION_HEADERS = {
   'Authorization': 'Bearer ' + TOKEN,
   'Notion-Version': NOTION_VERSION
