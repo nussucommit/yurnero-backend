@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('vrogros/', include('vrogros.urls')),
     path('events/', include('creation.urls')),
+    path('', include('Cyberia.urls')),
 ]
