@@ -2,12 +2,10 @@ import json
 
 def parse(data):
     if (data["object"] == "list"):
-        print("debug")
         return parseList(data["results"])
     
 
 def parseList(data):
-    print(data)
     list = []
     for i in data:
         if (i["type"] == "heading_1"):
@@ -42,23 +40,22 @@ def parseText(data):
     
     special_attribute = dict()
     for attribute in data["annotations"]:
-        if ((data["annotations"][attribute] == True) or 
-        (attribute == "color" and data["annotations"][attribute] != "default")):
+        if (attribute != "color" and data["annotations"][attribute] == True):
             special_attribute[attribute] = True
+
+        elif (attribute == "color" and data["annotations"][attribute] != "default"):
+            special_attribute[attribute] = data["annotations"][attribute]
+            
     
     result["attribute"] = special_attribute
     return result
 
 def parseBulletList(data):
     result = dict()
-    print(data)
-    result["type"] = "bulleted_list_item"
-    result["content"] = data["plain_text"]
-    special_attribute = dict()
-    for attribute in data["annotations"]:
-        if ((data["annotations"][attribute] == True) or 
-        (attribute == "color" and data["annotations"][attribute] != "default")):
-            special_attribute[attribute] = True
     
-    result["attribute"] = special_attribute
+    result["type"] = "bulleted_list_item"
+    list = []
+    for i in data["bulleted_list_item"]["text"]:
+        list.append(parseText(i))
+    result["content"] = list
     return result

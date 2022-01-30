@@ -20,6 +20,7 @@ version = os.getenv('version')
 def Cyberia(request):
     data = []
     # data += overview()
+    data += benefit()
     result = dict()
     result["result"] = data
     benefit()
@@ -39,9 +40,7 @@ def benefit():
     headers = {'Notion-Version': version, 'Authorization': token}
     response = requests.get(url, headers=headers)
     data = response.json()
-    print(parse(data))
-    # print(data)
-    # return parse(data)
+    return parse(data)
 
 def time():
     url = 'https://api.notion.com/v1/blocks/95e9bd5dd0394a2bb8e6b5c10b3433b3/children'
