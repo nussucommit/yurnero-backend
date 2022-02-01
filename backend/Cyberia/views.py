@@ -21,8 +21,9 @@ components = dict()
 @api_view(['Get'])
 def Cyberia(request):
     data = []
+    
     thread = [Thread(target=overview), Thread(target=benefit), 
-    Thread(target=time),Thread(target=registriation), 
+    Thread(target=time),Thread(target=registriation), Thread(target=trainers),
     Thread(target=acadia_training), Thread(target=contact)]
 
     for t in thread:
@@ -37,9 +38,11 @@ def Cyberia(request):
     data += components["time"]
     data += components["registriation"]
     data += components["acadia_training"]
+    data += components["trainers"]
     data += components["contact"]
     result["result"] = data
-    return Response(result, status=status.HTTP_200_OK)
+
+    return Response(data, status=status.HTTP_200_OK)
 
 
 def overview():
@@ -83,6 +86,9 @@ def acadia_training():
 def trainers():
     url = 'https://api.notion.com/v1/blocks/949adb5dff604986be8785c4d65d7c70/children'
     headers = {'Notion-Version': version, 'Authorization': token}
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    components["trainers"] = parse(data)
 
 def contact():
     url = 'https://api.notion.com/v1/blocks/139602eef0454c4aa124dc5363b272a0/children'

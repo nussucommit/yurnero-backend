@@ -23,6 +23,8 @@ def parseList(data):
             list.append(parseParagraph(i))
         elif (i["type"] == "bulleted_list_item"):
             list.append(parseBulletList(i))
+        elif (i["type"] == "table"):
+            list.append(parseTable(i))
     return list
 
 
@@ -78,3 +80,18 @@ def parseBulletList(data):
         list.append(bullet_item)
     result["content"] = list
     return result
+
+def parseTable(data):
+    result = []
+    url = 'https://api.notion.com/v1/blocks/' + data["id"] + '/children'
+    headers = {'Notion-Version': version, 'Authorization': token}
+    response = requests.get(url, headers=headers)
+    table = response.json()
+    for i in table["results"]:
+        row = []
+        for j in i["table_row"]["cells"]:
+            row.append(j[0]["plain_text"])
+        result.append(row)
+    return {"result": result}
+
+
