@@ -19,7 +19,7 @@ components = dict()
 # Create your views here.
 
 @api_view(['Get'])
-def Cyberia(request):
+def cyberia(request):
     data = []
     
     thread = [Thread(target=overview), Thread(target=benefit), 

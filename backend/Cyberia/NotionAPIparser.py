@@ -17,7 +17,7 @@ def parse(data):
 def parseList(data):
     list = []
     for i in data:
-        if (i["type"] == "heading_1"):
+        if (i["type"] in ["heading_1", "heading_2", "heading_3"]):
             list.append(parseHeading(i))
         elif (i["type"] == "paragraph"):
             list.append(parseParagraph(i))
@@ -31,7 +31,7 @@ def parseList(data):
 def parseHeading(data):
     result = dict()
     result["type"] = "heading"
-    result["content"] = data["heading_1"]["text"][0]["plain_text"]
+    result["content"] = data[data["type"]]["text"][0]["plain_text"]
     return result
 
 def parseParagraph(data):
