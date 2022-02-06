@@ -6,6 +6,7 @@ import requests
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+from Cyberia.NotionAPIparser import *
 
 
 # DECLARATIONS GO HERE
@@ -60,3 +61,12 @@ def get_sample_block_children(request):
   response = requests.get(url, headers=NOTION_HEADERS)
 
   return Response(response.json(), status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def testParseNumberedList(request):
+  block_id = "0aafd740d61d4460aed2b0c3e10a2b71"
+  url = GET_BLOCK_URL + block_id
+  block_response = requests.get(url, headers=NOTION_HEADERS)
+  result = parseNumberedList(block_response.json())
+  response = {"data": result}
+  return Response(response, status=status.HTTP_200_OK)

@@ -1,4 +1,4 @@
-from numpy import extract
+# from numpy import extract
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 import requests
