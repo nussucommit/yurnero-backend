@@ -8,6 +8,8 @@ dotenv_path = Path('backend/.env')
 load_dotenv(dotenv_path)
 token = os.getenv('token')
 version = os.getenv('version')
+URL = 'https://api.notion.com/v1/blocks/'
+HEADERS = {'Notion-Version': version, 'Authorization': 'Bearer ' + token}
 
 def parse(data):
     if (data["object"] == "list"):
@@ -94,4 +96,24 @@ def parseTable(data):
         result.append(row)
     return {"result": result}
 
+def parseImage(data):
+    result = dict()
+    result["type"] = "image"
+    result["url"] = data["image"]["file"]["url"]
+    return result
+
+def parseNumberedList(data):
+    result = dict()
+    result["type"] = "numbered_list_item"
+    content = []
+    for i in data["numbered_list_item"]["text"]:
+        numbered_item = parseText(i)
+        content.append(numbered_item)
+    if data["has_children"]:
+        url = URL + data["id"] + '/children'
+        response = requests.get(url, headers=HEADERS)
+        data = response.json()
+        result["children"] = parse(data)
+    result["content"] = content
+    return result
 
