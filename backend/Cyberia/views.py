@@ -1,4 +1,3 @@
-from urllib import response
 from rest_framework.decorators import api_view
 from dotenv import load_dotenv
 from rest_framework.response import Response
