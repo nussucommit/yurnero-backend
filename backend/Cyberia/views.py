@@ -25,9 +25,13 @@ NOTION_HEADER = {'Notion-Version': version, 'Authorization': token}
 def cyberia(request):
     data = []
     
-    thread = [Thread(target=overview), Thread(target=benefit), 
-    Thread(target=time),Thread(target=registriation), Thread(target=trainers),
-    Thread(target=acadia_training), Thread(target=contact)]
+    thread = [Thread(target=part, args=("overview", "40712ecd5d6246aab46d9d51442c1727")), 
+    Thread(target=part, args=("benefits", "1b95121ff4e24ab38c155c99c42675d9")), 
+    Thread(target=part, args=("time", "95e9bd5dd0394a2bb8e6b5c10b3433b3")),
+    Thread(target=part, args=("registriation", "8bfb13152625483f996f26c2e7d2b371")), 
+    Thread(target=part, args=("acadia_training", "d36eabdea553461dadf34410534deb25")),
+    Thread(target=part, args=("trainers", "949adb5dff604986be8785c4d65d7c70")),
+    Thread(target=part, args=("contact", "139602eef0454c4aa124dc5363b272a0"))]
 
     for t in thread:
         t.start()
@@ -48,57 +52,13 @@ def cyberia(request):
     return Response(data, status=status.HTTP_200_OK)
 
 
-def overview():
-    blockid = '40712ecd5d6246aab46d9d51442c1727'
-    url = NOTION_PAGE_URL.format(blockid = blockid)
+def part(component, id):
+    url = NOTION_PAGE_URL.format(blockid = id)
     response = requests.get(url, headers=NOTION_HEADER)
     data = response.json()
-    components["overview"] = parse(data)
+    components[component] = parse(data)
 
 
-def benefit():
-    blockid = '1b95121ff4e24ab38c155c99c42675d9'
-    url = NOTION_PAGE_URL.format(blockid = blockid)
-    response = requests.get(url, headers=NOTION_HEADER)
-    data = response.json()
-    components["benefits"] = parse(data)
-
-
-def time():
-    blockid = '95e9bd5dd0394a2bb8e6b5c10b3433b3'
-    url = NOTION_PAGE_URL.format(blockid = blockid)
-    response = requests.get(url, headers=NOTION_HEADER)
-    data = response.json()
-    components["time"] = parse(data)
-
-
-def registriation():
-    blockid = '8bfb13152625483f996f26c2e7d2b371'
-    url = NOTION_PAGE_URL.format(blockid = blockid)
-    response = requests.get(url, headers=NOTION_HEADER)
-    data = response.json()
-    components["registriation"] = parse(data)
-
-def acadia_training():
-    blockid = 'd36eabdea553461dadf34410534deb25'
-    url = NOTION_PAGE_URL.format(blockid = blockid)
-    response = requests.get(url, headers=NOTION_HEADER)
-    data = response.json()
-    components["acadia_training"] = parse(data)
-
-def trainers():
-    blockid = '949adb5dff604986be8785c4d65d7c70'
-    url = NOTION_PAGE_URL.format(blockid = blockid)
-    response = requests.get(url, headers=NOTION_HEADER)
-    data = response.json()
-    components["trainers"] = parse(data)
-
-def contact():
-    blockid = '139602eef0454c4aa124dc5363b272a0'
-    url = NOTION_PAGE_URL.format(blockid = blockid)
-    response = requests.get(url, headers=NOTION_HEADER)
-    data = response.json()
-    components["contact"] = parse(data)
 
 
 
