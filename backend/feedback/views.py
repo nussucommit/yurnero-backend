@@ -21,17 +21,17 @@ FEEDBACK_DATABASE_ID = "df61518678a84bfbbdda34e6f253af69"
 
 @api_view(['Post'])
 def feedback(request):
-    response = None
     content = json.loads(str(request.body, encoding='utf-8'))
+    print(type(content))
     try:
-        data = configureJSON(content['name'], content['email'], content['subject'], content['message'])
+        data = configure_json(content['name'], content['email'], content['subject'], content['message'])
         response = requests.post("https://api.notion.com/v1/pages", headers=NOTION_HEADER,data=json.dumps(data))
         return Response(response.json(), status=status.HTTP_201_CREATED) 
     except:
-        return Response(response.json(), status=status.HTTP_400_BAD_REQUEST)
+        return Response({"invalid": "certain values are missing"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-def configureJSON(name, email, subject, message):
+def configure_json(name, email, subject, message):
     feedback_skeleton = {
         "parent": {
             "database_id": FEEDBACK_DATABASE_ID
