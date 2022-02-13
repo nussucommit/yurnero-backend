@@ -22,7 +22,6 @@ FEEDBACK_DATABASE_ID = "df61518678a84bfbbdda34e6f253af69"
 @api_view(['Post'])
 def feedback(request):
     content = json.loads(str(request.body, encoding='utf-8'))
-    print(type(content))
     try:
         data = configure_json(content['name'], content['email'], content['subject'], content['message'])
         response = requests.post("https://api.notion.com/v1/pages", headers=NOTION_HEADER,data=json.dumps(data))
