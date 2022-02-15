@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'Cyberia.apps.CyberiaConfig',
     'feedback.apps.FeedbackConfig',
+    'subscribe.apps.SubscribeConfig',
 ]
 
 MIDDLEWARE = [
