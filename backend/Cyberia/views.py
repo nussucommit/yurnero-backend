@@ -5,7 +5,7 @@ from rest_framework import status
 from pathlib import Path
 import os
 import requests
-from Cyberia.NotionAPIparser import * 
+from backend.notion_api_parser import * 
 from threading import Thread
 
 dotenv_path = Path('backend/.env')
