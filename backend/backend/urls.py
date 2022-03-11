@@ -20,6 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Cyberia.urls')),
     path('', include('creation.urls')),
+    path('', include('chariteach.urls')),
     path('', include('feedback.urls')),
     path('', include('subscribe.urls')),
 ]

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'Cyberia.apps.CyberiaConfig',
     'creation.apps.CreationConfig',
+    "chariteach.apps.ChariteachConfig",
     'feedback.apps.FeedbackConfig',
     'subscribe.apps.SubscribeConfig',
 ]
