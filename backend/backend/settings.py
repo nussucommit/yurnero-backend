@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'Cyberia.apps.CyberiaConfig',
     'feedback.apps.FeedbackConfig',
     'subscribe.apps.SubscribeConfig',
+    'FAQ.apps.FAQConfig',
 ]
 
 MIDDLEWARE = [
