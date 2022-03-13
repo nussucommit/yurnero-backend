@@ -33,9 +33,9 @@ def home(request):
 
   return Response(components, status=status.HTTP_200_OK)
 
-
 def part(components, component, id):
     url = NOTION_PAGE_URL.format(blockid = id)
     response = requests.get(url, headers=NOTION_HEADER)
     data = response.json()
     components[component] = parse(data)
+    
