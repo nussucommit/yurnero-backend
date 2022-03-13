@@ -99,6 +99,7 @@ def parse_table(data):
 def parse_image(data):
     result = dict()
     result["type"] = "image"
-    result["content"] = data[data["type"]]["file"]["url"]
+    imagetype = data[data["type"]]["type"]
+    result["content"] = data[data["type"]][imagetype]["url"]
     return result
 
