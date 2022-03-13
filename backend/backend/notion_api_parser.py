@@ -13,40 +13,40 @@ HEADERS = {'Notion-Version': version, 'Authorization': 'Bearer ' + token}
 
 def parse(data):
     if (data["object"] == "list"):
-        return parseList(data["results"])
+        return parse_list(data["results"])
     
 
-def parseList(data):
+def parse_list(data):
     list = []
     for i in data:
         if (i["type"] in ["heading_1", "heading_2", "heading_3"]):
-            list.append(parseHeading(i))
+            list.append(parse_heading(i))
         elif (i["type"] == "paragraph"):
-            list.append(parseParagraph(i))
+            list.append(parse_paragraph(i))
         elif (i["type"] == "bulleted_list_item"):
-            list.append(parseBulletList(i))
+            list.append(parse_bullet_list(i))
         elif (i["type"] == "table"):
-            list.append(parseTable(i))
+            list.append(parse_table(i))
     return list
 
 
-def parseHeading(data):
+def parse_heading(data):
     result = dict()
     result["type"] = "heading"
     result["content"] = data[data["type"]]["text"][0]["plain_text"]
     return result
 
-def parseParagraph(data):
+def parse_paragraph(data):
     list = []
     for i in data["paragraph"]["text"]:
-        list.append(parseText(i))
+        list.append(parse_text(i))
     
     result = dict()
     result["type"] = "paragraph"
     result["content"] = list
     return result
 
-def parseText(data):
+def parse_text(data):
     result = dict()
     result["type"] = "text"
     result["content"] = data["plain_text"]
@@ -65,13 +65,13 @@ def parseText(data):
     result["attribute"] = special_attribute
     return result
 
-def parseBulletList(data):
+def parse_bullet_list(data):
     result = dict()
     
     result["type"] = "bulleted_list_item"
     list = []
     for i in data["bulleted_list_item"]["text"]:
-        bullet_item = parseText(i)
+        bullet_item = parse_text(i)
         if data["has_children"]:
             url = 'https://api.notion.com/v1/blocks/' + data["id"] + '/children'
             headers = {'Notion-Version': version, 'Authorization': token}
@@ -83,7 +83,7 @@ def parseBulletList(data):
     result["content"] = list
     return result
 
-def parseTable(data):
+def parse_table(data):
     result = []
     url = 'https://api.notion.com/v1/blocks/' + data["id"] + '/children'
     headers = {'Notion-Version': version, 'Authorization': token}
