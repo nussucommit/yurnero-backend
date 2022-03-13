@@ -21,4 +21,5 @@ urlpatterns = [
     path('', include('Cyberia.urls')),
     path('', include('feedback.urls')),
     path('', include('subscribe.urls')),
+    path('about-us/', include('about_us.urls'))
 ]
