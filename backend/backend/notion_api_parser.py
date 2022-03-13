@@ -96,18 +96,18 @@ def parse_table(data):
         result.append(row)
     return {"result": result}
 
-def parseImage(data):
+def parse_image(data):
     result = dict()
     result["type"] = "image"
     result["url"] = data["image"]["file"]["url"]
     return result
 
-def parseNumberedList(data):
+def parse_numbered_list(data):
     result = dict()
     result["type"] = "numbered_list_item"
     content = []
     for i in data["numbered_list_item"]["text"]:
-        numbered_item = parseText(i)
+        numbered_item = parse_text(i)
         content.append(numbered_item)
     if data["has_children"]:
         url = URL + data["id"] + '/children'
