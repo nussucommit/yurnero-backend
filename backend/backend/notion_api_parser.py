@@ -27,6 +27,12 @@ def parse_list(data):
             list.append(parse_bullet_list(i))
         elif (i["type"] == "table"):
             list.append(parse_table(i))
+        elif (i["type"] == "quote"):
+            list.append(parse_quote(i))
+        elif (i["type"] == "image"):
+            list.append(parse_image(i))
+        elif (i["type"] == "numbered_list_item"):
+            list.append(parse_numbered_list(i))
     return list
 
 
@@ -117,3 +123,12 @@ def parse_numbered_list(data):
     result["content"] = content
     return result
 
+def parse_quote(data):
+    lst = []
+    for i in data["quote"]["text"]:
+        lst.append(parse_text(i))
+
+    result = dict()
+    result["type"] = "quote"
+    result["content"] = lst
+    return result
