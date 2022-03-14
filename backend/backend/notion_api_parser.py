@@ -79,7 +79,7 @@ def parse_bullet_list(data):
     for i in data["bulleted_list_item"]["text"]:
         bullet_item = parse_text(i)
         if data["has_children"]:
-            url = 'https://api.notion.com/v1/blocks/' + data["id"] + '/children'
+            url = URL + data["id"] + '/children'
             headers = {'Notion-Version': version, 'Authorization': token}
             response = requests.get(url, headers=headers)
             data = response.json()
@@ -91,7 +91,7 @@ def parse_bullet_list(data):
 
 def parse_table(data):
     result = []
-    url = 'https://api.notion.com/v1/blocks/' + data["id"] + '/children'
+    url = URL + data["id"] + '/children'
     headers = {'Notion-Version': version, 'Authorization': token}
     response = requests.get(url, headers=headers)
     table = response.json()
