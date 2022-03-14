@@ -8,6 +8,8 @@ dotenv_path = Path('backend/.env')
 load_dotenv(dotenv_path)
 token = os.getenv('token')
 version = os.getenv('version')
+URL = 'https://api.notion.com/v1/blocks/'
+HEADERS = {'Notion-Version': version, 'Authorization': 'Bearer ' + token}
 
 def parse(data):
     if (data["object"] == "list"):
@@ -25,6 +27,12 @@ def parse_list(data):
             list.append(parse_bullet_list(i))
         elif (i["type"] == "table"):
             list.append(parse_table(i))
+        elif (i["type"] == "quote"):
+            list.append(parse_quote(i))
+        elif (i["type"] == "image"):
+            list.append(parse_image(i))
+        elif (i["type"] == "numbered_list_item"):
+            list.append(parse_numbered_list(i))
     return list
 
 
@@ -71,9 +79,8 @@ def parse_bullet_list(data):
     for i in data["bulleted_list_item"]["text"]:
         bullet_item = parse_text(i)
         if data["has_children"]:
-            url = 'https://api.notion.com/v1/blocks/' + data["id"] + '/children'
-            headers = {'Notion-Version': version, 'Authorization': token}
-            response = requests.get(url, headers=headers)
+            url = URL + data["id"] + '/children'
+            response = requests.get(url, headers=HEADERS)
             data = response.json()
             bullet_item["children"] = parse(data)
         
@@ -83,15 +90,43 @@ def parse_bullet_list(data):
 
 def parse_table(data):
     result = []
-    url = 'https://api.notion.com/v1/blocks/' + data["id"] + '/children'
-    headers = {'Notion-Version': version, 'Authorization': token}
-    response = requests.get(url, headers=headers)
+    url = URL + data["id"] + '/children'
+    response = requests.get(url, headers=HEADERS)
     table = response.json()
     for i in table["results"]:
         row = []
         for j in i["table_row"]["cells"]:
             row.append(j[0]["plain_text"])
         result.append(row)
-    return {"result": result}
+    return {"type": "table", "result": result}
 
+def parse_image(data):
+    result = dict()
+    result["type"] = "image"
+    result["url"] = data["image"]["file"]["url"]
+    return result
 
+def parse_numbered_list(data):
+    result = dict()
+    result["type"] = "numbered_list_item"
+    content = []
+    for i in data["numbered_list_item"]["text"]:
+        numbered_item = parse_text(i)
+        content.append(numbered_item)
+    if data["has_children"]:
+        url = URL + data["id"] + '/children'
+        response = requests.get(url, headers=HEADERS)
+        data = response.json()
+        result["children"] = parse(data)
+    result["content"] = content
+    return result
+
+def parse_quote(data):
+    lst = []
+    for i in data["quote"]["text"]:
+        lst.append(parse_text(i))
+
+    result = dict()
+    result["type"] = "quote"
+    result["content"] = lst
+    return result
