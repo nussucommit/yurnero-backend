@@ -100,7 +100,7 @@ def parse_table(data):
         for j in i["table_row"]["cells"]:
             row.append(j[0]["plain_text"])
         result.append(row)
-    return {"result": result}
+    return {"type": "table", "result": result}
 
 def parse_image(data):
     result = dict()
