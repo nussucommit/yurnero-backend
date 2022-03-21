@@ -25,6 +25,8 @@ def parse_list(data):
             list.append(parse_bullet_list(i))
         elif (i["type"] == "table"):
             list.append(parse_table(i))
+        elif (i["type"] == "image"):
+            list.append(parse_image(i))
     return list
 
 
@@ -94,4 +96,10 @@ def parse_table(data):
         result.append(row)
     return {"result": result}
 
+def parse_image(data):
+    result = dict()
+    result["type"] = "image"
+    imagetype = data[data["type"]]["type"]
+    result["content"] = data[data["type"]][imagetype]["url"]
+    return result
 

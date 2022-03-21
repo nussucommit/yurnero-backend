@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'Cyberia.apps.CyberiaConfig',
+    'events.apps.EventsConfig',
+    'services.apps.ServicesConfig',
     'feedback.apps.FeedbackConfig',
     'subscribe.apps.SubscribeConfig',
 ]
