@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'services.apps.ServicesConfig',
     'feedback.apps.FeedbackConfig',
     'subscribe.apps.SubscribeConfig',
-    'FAQ.apps.FAQConfig',
+    'FAQ.apps.FaqConfig',
 ]
 
 MIDDLEWARE = [
