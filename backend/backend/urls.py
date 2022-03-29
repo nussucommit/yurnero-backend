@@ -22,4 +22,5 @@ urlpatterns = [
     path('', include('events.urls')),
     path('', include('feedback.urls')),
     path('', include('subscribe.urls')),
+    path('', include('FAQ.urls')),
 ]
