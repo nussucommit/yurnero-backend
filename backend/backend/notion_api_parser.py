@@ -107,7 +107,7 @@ def parse_image(data):
 
 def parse_database(data):
     result = []
-    url =  'https://api.notion.com/v1/databases/' + data["id"] + '/query'
+    url = 'https://api.notion.com/v1/databases/' + data["id"] + '/query'
     payload = {"page_size": 100}
     headers = {"Notion-Version": version, 'Authorization': token}
     response = requests.post(url, json=payload, headers=headers)
@@ -131,4 +131,4 @@ def to_model(entry):
         if len(title) != 0:
             name = title[0]["plain_text"]
 
-    return {"Email Address" : email, "Year" : year, "Name" : name}
+    return {"Email Address": email, "Year": year, "Name": name}
