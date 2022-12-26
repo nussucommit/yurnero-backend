@@ -23,4 +23,5 @@ urlpatterns = [
     path('', include('feedback.urls')),
     path('', include('subscribe.urls')),
     path('', include('FAQ.urls')),
+    path('home/', include('home.urls')),
 ]
