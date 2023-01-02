@@ -114,11 +114,11 @@ def parse_database(data):
 
     table = response.json()
     for i in table["results"]:
-        result.append(to_model(i["properties"]))
+        result.append(to_subscriber_model(i["properties"]))
 
     return {"result" : result}
 
-def to_model(entry):
+def to_subscriber_model(entry):
     email = ""
     year = ""
     name = ""
