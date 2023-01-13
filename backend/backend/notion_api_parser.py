@@ -16,29 +16,31 @@ def parse(data):
 
 def parse_list(data):
     list = []
-    for i in data:
-        if (i["type"] in ["heading_1", "heading_2", "heading_3"]):
-            list.append(parse_heading(i))
-        elif (i["type"] == "paragraph"):
-            list.append(parse_paragraph(i))
-        elif (i["type"] == "bulleted_list_item"):
-            list.append(parse_bullet_list(i))
-        elif (i["type"] == "table"):
-            list.append(parse_table(i))
-        elif (i["type"] == "image"):
-            list.append(parse_image(i))
+    print(data)
+    for datum in data:
+        if (datum["type"] in ["heading_1", "heading_2", "heading_3"]):
+            list.append(parse_heading(datum))
+        elif (datum["type"] == "paragraph"):
+            list.append(parse_paragraph(datum))
+        elif (datum["type"] == "bulleted_list_item"):
+            list.append(parse_bullet_list(datum))
+        elif (datum["type"] == "table"):
+            list.append(parse_table(datum))
+        elif (datum["type"] == "image"):
+            list.append(parse_image(datum))
     return list
 
 
 def parse_heading(data):
     result = dict()
+    
     result["type"] = "heading"
-    result["content"] = data[data["type"]]["text"][0]["plain_text"]
+    result["content"] = data[data["type"]]["rich_text"][0]["plain_text"]
     return result
 
 def parse_paragraph(data):
     list = []
-    for i in data["paragraph"]["text"]:
+    for i in data["paragraph"]["rich_text"]:
         list.append(parse_text(i))
     
     result = dict()
@@ -70,7 +72,7 @@ def parse_bullet_list(data):
     
     result["type"] = "bulleted_list_item"
     list = []
-    for i in data["bulleted_list_item"]["text"]:
+    for i in data["bulleted_list_item"]["rich_text"]:
         bullet_item = parse_text(i)
         if data["has_children"]:
             url = 'https://api.notion.com/v1/blocks/' + data["id"] + '/children'

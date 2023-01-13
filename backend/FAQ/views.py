@@ -18,7 +18,7 @@ load_dotenv(dotenv_path)
 token = os.getenv('token')
 version = os.getenv('version')
 components = dict()
-list = dict()
+list_of_text_data = dict()
 
 NOTION_PAGE_URL = 'https://api.notion.com/v1/blocks/{blockid}/children'
 NOTION_PAGE = 'https://api.notion.com/v1/blocks/{blockid}'
@@ -58,11 +58,10 @@ PEOPLE_WITH_BASICS = '74e4214c4258407aa5d9aae8da618932'
 @api_view(['Get'])
 def faq(request):
     data = []
-
     
     thread = [Thread(target=component, args=("About CommIT", 
     {"what is commit" : WHAT_IS_COMMIT, "what does commit do" : WHAT_DOES_COMMIT_DO, 
-    "how to apply": HOW_TO_APPLY})),
+     "how to apply": HOW_TO_APPLY})),
     Thread(target=component, args=("Registration Procedure and Place", 
     {"How do I register?": HOW_TO_REGISTER, "workshop place guaranteed": WORKSHOP_GUARANTEED, 
     "When and how do I pay the $5 refundable deposit?": PAY_DEPOSIT,
@@ -75,6 +74,7 @@ def faq(request):
     {"get refund if cannot attend": REFUND_IF_CANNOT_ATTEND, "payment": WHAT_TO_DO_IF_CANNOT_COME_TO_PAY})),
     Thread(target=component, args=("Trainers and Materials Coverage",
     {"trainers": TRAINERS, "prerequisite": PREREQUISITE, "basics": PEOPLE_WITH_BASICS}))]
+    
 
     for t in thread:
         t.start()
@@ -84,23 +84,25 @@ def faq(request):
 
     sort_order = ["About CommIT", "Registration Procedure and Place", "About the Workshops",
     "Issues regarding Payment of Refundable Deposit", "Trainers and Materials Coverage"]
-    res = {k: list[k] for k in sort_order}
+    
+    res = {k: list_of_text_data[k] for k in sort_order}
     return Response(res, status=status.HTTP_200_OK)
 
 
 def part(component, id):
+    
     url = NOTION_PAGE_URL.format(blockid = id)
     response = requests.get(url, headers=NOTION_HEADER)
     data = response.json()
     components[component] = parse(data)
 
 
-def component(header, blockid):
+def component(header, blockid_list):
     threads = []
     result = []
-
-    for i in blockid.keys():
-        threads.append(Thread(target=part, args=(i, blockid[i])))
+    
+    for i in blockid_list.keys():
+        threads.append(Thread(target=part, args=(i, blockid_list[i])))
     
     for thread in threads:
         thread.start()
@@ -108,10 +110,10 @@ def component(header, blockid):
     for thread in threads:
         thread.join()
     
-    for i in blockid.keys():
+    for i in blockid_list.keys():
         result += components[i]
     
-    list[header] = result
+    list_of_text_data[header] = result
 
 
     
