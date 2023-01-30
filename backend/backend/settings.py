@@ -25,7 +25,7 @@ SECRET_KEY = '($n+th=ai$pzx+0v308j=_1#uc4ogmd%tlh_g+4h#ety8e+ou3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000']
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000', 'nussucommit-backend.herokuapp.com']
 
 
 # Application definition
