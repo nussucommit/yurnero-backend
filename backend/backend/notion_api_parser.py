@@ -29,6 +29,8 @@ def parse_list(data):
             list.append(parse_image(i))
         elif (i["type"] == "child_database"):
             list.append(parse_database(i))
+        elif (i["type"] == "text"):
+            list.append(parse_text(i))
     return list
 
 
@@ -86,17 +88,20 @@ def parse_bullet_list(data):
     return result
 
 def parse_table(data):
-    result = []
+    result = dict()
     url = 'https://api.notion.com/v1/blocks/' + data["id"] + '/children'
     headers = {'Notion-Version': version, 'Authorization': token}
     response = requests.get(url, headers=headers)
     table = response.json()
+    #Assume that table does not have children inside the block
+    list = []
     for i in table["results"]:
-        row = []
-        for j in i["table_row"]["cells"]:
-            row.append(j[0]["plain_text"])
-        result.append(row)
-    return {"result": result}
+        for cell in i["table_row"]["cells"]:
+            list.extend(parse_list(cell))
+        
+    result["type"] = "table_row"
+    result["content"] = list
+    return result
 
 def parse_image(data):
     result = dict()
