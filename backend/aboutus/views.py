@@ -81,7 +81,7 @@ def structure(request):
 
 @api_view(['Get'])
 def family(request):
-    data = [get_parsed_data(OURFAMILY_URL)]
+    data = get_parsed_data(OURFAMILY_URL)
     return Response(data, status=status.HTTP_200_OK)
 
 @api_view(['Get'])
@@ -105,7 +105,7 @@ def manag_comm(request):
 
 @api_view(['Get'])
 def overview(request):
-    data = [get_parsed_data(OVERVIEW_URL)]
+    data = get_parsed_data(OVERVIEW_URL)
     return Response(data, status=status.HTTP_200_OK)
 
 def get_parsed_data(id):
