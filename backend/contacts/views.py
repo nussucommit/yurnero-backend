@@ -9,7 +9,6 @@ from pathlib import Path
 import os
 from backend.notion_api_parser import *
 import requests
-from backend.notion_api_parser import *
 from threading import Thread
 
 dotenv_path = Path('backend/.env')
@@ -27,15 +26,11 @@ AS8_CONTACTS = "9085515cae9a427e98a2d18f946527e6"
 CONTACT_US = "954f3393bbd24c42958ead8d3ce806be"
 SUBSCRIBE_LIST = "5b865a50b2ed473dbb32da1a0d170bfc"
 
-
-@api_view(['Get'])
+@api_view(["Get"])
 def contacts(data):
-    data = []
+    data = dict()
 
-    thread = [Thread(target=part, args=("yih", YIH_CONTACTS)),
-              Thread(target=part, args=("as8", AS8_CONTACTS)),
-              Thread(target=part, args=("contactus", CONTACT_US)),
-              Thread(target=part, args=("subscribelist", SUBSCRIBE_LIST))]
+    thread = [Thread(target=part, args=("contactus", CONTACT_US))]
 
     for t in thread:
         t.start()
@@ -43,16 +38,66 @@ def contacts(data):
     for t in thread:
         t.join()
 
-    result = dict()
-    data += components["yih"]
-    data += components["as8"]
-    data += components["contactus"]
-    data += components["subscribelist"]
-    result["result"] = data
+    data["contactus"] = dict()
+
+    contact_types = ["general_enquiries", "marketing_and_sponsorship", "workshop_enquiries" ]
+    for contact_type in contact_types:
+        data["contactus"][contact_type] = []
+
+    index = 0
+
+    for paragraph in components["contactus"]:
+        print(type(paragraph))
+        # Notion separate the group of paragraph with an empty paragrapg
+        if (len(paragraph["content"]) == 0):
+            index += 1
+            continue;
+        data["contactus"][contact_types[index]].append(paragraph)
+
+    return Response(data, status=status.HTTP_200_OK)
+
+@api_view(['Get'])
+def address(data):
+    data = dict()
+
+    thread = [Thread(target=part, args=("yih", YIH_CONTACTS)),
+              Thread(target=part, args=("as8", AS8_CONTACTS))]
+
+    for t in thread:
+        t.start()
+
+    for t in thread:
+        t.join()
+
+    locations = ["yih", "as8"]
+    data["locations"] = dict()
+
+    for location in locations:
+        unfilteredComponent = components[location]
+        filteredComponent = list(filter(lambda x: len(x["content"]) != 0, unfilteredComponent))
+        data["locations"][location] = dict()
+        data["locations"][location]["address"] = filteredComponent[:2]
+        data["locations"][location]["opening_hour"] = filteredComponent[2:]
+
+    data["contactus"] = dict()
 
     return Response(data, status=status.HTTP_200_OK)
 
 
+@api_view(['Get'])
+def subscribe(data):
+    data = dict()
+
+    thread = [Thread(target=part, args=("subscribe_list", SUBSCRIBE_LIST))]
+
+    for t in thread:
+        t.start()
+
+    for t in thread:
+        t.join()
+
+    data["subscribe_list"] = components["subscribe_list"]
+    return Response(data, status=status.HTTP_200_OK)
 def part(component, id):
     url = NOTION_PAGE_URL.format(blockid=id)
     response = requests.get(url, headers=NOTION_HEADER)
