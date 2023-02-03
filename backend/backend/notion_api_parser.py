@@ -31,6 +31,8 @@ def parse_list(data):
             list.append(parse_database(i))
         elif (i["type"] == "text"):
             list.append(parse_text(i))
+        elif (i["type"] == "quote"):
+            list.append(parse_quote(i))
     return list
 
 
@@ -67,6 +69,16 @@ def parse_text(data):
             special_attribute["link"] = data["text"]["link"]["url"]
 
     result["attribute"] = special_attribute
+    return result
+
+def parse_quote(data):
+    list = []
+    for i in data["quote"]["text"]:
+        list.append(parse_text(i))
+
+    result = dict()
+    result["type"] = "quote"
+    result["content"] = list
     return result
 
 def parse_bullet_list(data):
